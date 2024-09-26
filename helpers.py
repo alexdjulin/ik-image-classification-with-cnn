@@ -23,18 +23,10 @@ from keras.applications.resnet50 import preprocess_input
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from tensorflow.image import resize
 
-from sklearn.metrics import confusion_matrix
+
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, confusion_matrix
 
 from multiprocessing import Pool, cpu_count
-
-# define pickling paths
-PICKLE_DIR = 'pickle'
-os.makedirs(PICKLE_DIR, exist_ok=True)
-
-x_train_pickle = os.path.join(PICKLE_DIR, 'x_train.pkl')
-y_train_pickle = os.path.join(PICKLE_DIR, 'y_train.pkl')
-x_test_pickle = os.path.join(PICKLE_DIR, 'x_test.pkl')
-y_test_pickle = os.path.join(PICKLE_DIR, 'y_test.pkl')
 
 
 # Resize function that takes in a batch of images
@@ -61,6 +53,14 @@ def pickled_data_exists(filenames):
 
 # Function to load and augment dataset
 def load_dataset(target_size=None):
+
+    pickle_dir = 'pickle'
+    # os.makedirs(pickle_dir, exist_ok=True)
+
+    x_train_pickle = os.path.join(pickle_dir, 'x_train.pkl')
+    y_train_pickle = os.path.join(pickle_dir, 'y_train.pkl')
+    x_test_pickle = os.path.join(pickle_dir, 'x_test.pkl')
+    y_test_pickle = os.path.join(pickle_dir, 'y_test.pkl')
 
     # Load pickled data if it exists
     if target_size and pickled_data_exists([x_train_pickle, y_train_pickle, x_test_pickle, y_test_pickle]):
@@ -102,10 +102,10 @@ def load_dataset(target_size=None):
         y_test = to_categorical(y_test, num_classes=10)
 
         # Save resized data to pickle files
-        save_to_pickle(x_train_pickle, x_train)
-        save_to_pickle(y_train_pickle, y_train)
-        save_to_pickle(x_test_pickle, x_test)
-        save_to_pickle(y_test_pickle, y_test)
+        # save_to_pickle(x_train_pickle, x_train)
+        # save_to_pickle(y_train_pickle, y_train)
+        # save_to_pickle(x_test_pickle, x_test)
+        # save_to_pickle(y_test_pickle, y_test)
 
     return x_train, y_train, x_test, y_test
 
@@ -127,8 +127,22 @@ def evaluate_model(model, x_test, y_test):
 
     # evaluate model
     test_loss, test_acc = model.evaluate(x_test, y_test)
-    print('Model Loss:', test_loss)
-    print('Model Accuracy:', test_acc)
+    
+    # make predictions
+    y_pred = np.argmax(model.predict(x_test), axis=1)
+    y_test = np.argmax(y_test, axis=1)
+
+    precision = precision_score(y_test, y_pred, average='binary')
+    recall = recall_score(y_test, y_pred, average='binary')
+    f1 = f1_score(y_test, y_pred, average='binary')
+    accuracy = accuracy_score(y_test, y_pred)
+    
+    print(f'Model Loss: {test_loss}')
+    print(f'Model Accuracy: {test_acc}')
+    print(f"Precision: {precision}")
+    print(f"Recall: {recall}")
+    print(f"F1-Score: {f1}")
+    print(f"Accuracy Score: {accuracy}")
 
 
 def plot_model_history(history):
