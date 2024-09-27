@@ -1,0 +1,11 @@
+numpy
+pandas
+matplotlib
+plotpy
+seaborn
+scikit-learn
+tensorflow
+keras
+opencv-python
+Pillow
+gradio
