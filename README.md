@@ -23,13 +23,24 @@ Final Grade and teacher's feedback:
 
 ----
 
-# Project I | Deep Learning: Image Classification with CNN
+# Image Classification with CNN
 
 Build a Convolutional Neural Network (CNN) model to classify images from a given dataset into predefined categories/classes.
 
-![gradio_demo](readme/gradio_demo.png)
-
 [Task Descriptions and Project Instructions](https://github.com/ironhack-labs/project-1-deep-learning-image-classification-with-cnn)
+
+<img src="readme/classification.png">
+
+## Project Results
+In this project, we processed the CIFAR10 dataset of images and explored different classifiers results:
+- Building a sequential CNN model from scratch
+- Transfer learning from VGG16
+- Transfer learning from ResNet50  (best results)
+- Fine-tuning ResNet50
+
+We deployed a simple gradio demo showing the classification results on unseen images.
+
+![gradio_demo](readme/gradio_demo.png)
 
 ## Repository Folders and Files
 
